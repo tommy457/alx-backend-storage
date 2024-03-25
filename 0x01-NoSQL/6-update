@@ -1,6 +1,6 @@
 // Script that adds a new attribute to a document in the collection school.
 
-db.school.updateMany(
+db.school.update(
   {
     name: "Holberton school"
   },
@@ -8,5 +8,8 @@ db.school.updateMany(
     $set : {
              address: "972 Mission street"
            }
+  },
+  {
+    multi: true
   }
 )
