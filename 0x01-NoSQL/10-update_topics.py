@@ -4,7 +4,7 @@ Module for the update_topics function.
 """
 
 
-def update_topics(mongo_collection: Collection, name, topics):
+def update_topics(mongo_collection, name, topics):
     """ changes all topics of a school document based on the name. """
     mongo_collection.update_many(
         {"name": name},
