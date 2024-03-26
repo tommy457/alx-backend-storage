@@ -15,7 +15,7 @@ if __name__ == "__main__":
     print("{} logs\nMethods:".format(total_count))
 
     for method in methods:
-        print("    method {}: {}".format(
+        print("\tmethod {}: {}".format(
             method,
             nginx_collection.count_documents({"method": method})
             )
