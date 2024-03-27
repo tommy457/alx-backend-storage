@@ -12,7 +12,9 @@ def get_page(url: str) -> str:
     client = redis.Redis()
 
     key = f"count:{url}"
+    responce_key = f"res:{url}"
+
     client.incr(key)
-    client.expire(key, 10)
+    client.setex(responce_key, 10, responce)
 
     return responce
