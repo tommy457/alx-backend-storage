@@ -21,7 +21,7 @@ class Cache:
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """ Stores the provided data in the Redis database. """
 
-        key: str = uuid.uuid4()
+        key: str = str(uuid.uuid4())
 
         self.redis.set(key, data)
         return key
