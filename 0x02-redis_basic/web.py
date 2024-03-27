@@ -13,6 +13,7 @@ def get_page(url: str) -> str:
 
     key = f"count:{url}"
     responce_key = f"res:{url}"
+    client.set(responce_key, responce)
 
     client.incr(key)
     client.setex(responce_key, 10, responce)
