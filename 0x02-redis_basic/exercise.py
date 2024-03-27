@@ -56,13 +56,3 @@ class Cache:
     def get_str(self, key: str) -> str:
         """ Converts the returned redis byte string to an str. """
         return str(self.redis.get(key))
-
-
-cache = Cache()
-
-cache.store(b"first")
-print(cache.get(cache.store.__qualname__))
-
-cache.store(b"second")
-cache.store(b"third")
-print(cache.get(cache.store.__qualname__))
