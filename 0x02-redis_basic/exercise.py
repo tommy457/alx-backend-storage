@@ -22,6 +22,22 @@ def count_calls(method: Callable) -> Callable:
     return wrapper
 
 
+def call_history(method: Callable) -> Callable:
+    """ decorator that takes a single method """
+
+    @wraps(method)
+    def wrapper(self, *args: Any, **kwargs: Any) -> Any:
+        """ wrapper function for counting how
+        many times a function is callded """
+        name = method.__qualname__
+        result = method(self, *args, **kwargs)
+        self.redis.rpush(f"{name}:inputs", str(args))
+        self.redis.rpush(f"{name}:outputs", result)
+
+        return result
+    return wrapper
+
+
 class Cache:
     """Represents a caching mechanism using Redis."""
     def __init__(self) -> None:
@@ -33,6 +49,7 @@ class Cache:
         """ Getter property for the Redis client object. """
         return self._redis
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """ Stores the provided data in the Redis database. """
