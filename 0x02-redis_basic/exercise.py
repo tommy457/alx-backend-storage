@@ -54,7 +54,7 @@ def replay(method: Callable) -> None:
     print("{} was called {} times:".format(name, int(totatl)))
 
     for key, value in zip(inputs_list, outputs_list):
-        print("{}(*({},)) -> {}".format(name, key, value))
+        print("{}(*{}) -> {}".format(name, key, value))
 
 
 class Cache:
