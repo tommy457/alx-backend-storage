@@ -15,7 +15,7 @@ def count_calls(method: Callable) -> Callable:
     def wrapper(self, *args: Any, **kwargs: Any) -> Any:
         """ wrapper function for counting how
         many times a function is callded """
-        self.redis.incr(method.__qualname__)
+        self._redis.incr(method.__qualname__)
 
         return method(self, *args, **kwargs)
 
@@ -31,8 +31,8 @@ def call_history(method: Callable) -> Callable:
         many times a function is callded """
         name = method.__qualname__
         result = method(self, *args, **kwargs)
-        self.redis.rpush(f"{name}:inputs", str(args))
-        self.redis.rpush(f"{name}:outputs", result)
+        self._redis.rpush(f"{name}:inputs", str(args))
+        self._redis.rpush(f"{name}:outputs", result)
 
         return result
     return wrapper
@@ -63,18 +63,13 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    @property
-    def redis(self):
-        """ Getter property for the Redis client object. """
-        return self._redis
-
     @call_history
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """ Stores the provided data in the Redis database. """
         key: str = str(uuid.uuid4())
 
-        self.redis.set(key, data)
+        self._redis.set(key, data)
         return key
 
     def get(self, key: str,
@@ -82,13 +77,13 @@ class Cache:
         """ Converts the returned redis byte string to the
         desired format with the callable `fn`"""
         if fn:
-            return fn(self.redis.get(key))
-        return self.redis.get(key)
+            return fn(self._redis.get(key))
+        return self._redis.get(key)
 
     def get_int(self, key: str) -> int:
         """ Converts the returned redis byte string to an int. """
-        return int(self.redis.get(key))
+        return int(self._redis.get(key))
 
     def get_str(self, key: str) -> str:
         """ Converts the returned redis byte string to an str. """
-        return str(self.redis.get(key))
+        return str(self._redis.get(key))
